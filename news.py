@@ -1,28 +1,29 @@
 import requests
-# 把下面引号里的内容换成你自己的Server酱密钥
-SEND_KEY = "SCT340534Tkb8yYcTXtIjOkOBKHNK7EQTw"
 
-def get_financial_news():
-    # 用新浪财经的公开接口，稳定不拦截
-    api_url = "https://v.juhe.cn/toutiao/index?type=caijing&key=你可以去聚合数据申请一个免费的key"
-    # 如果不想申请key，也可以用这个备用的静态新闻接口：
-    # api_url = "https://api.oioweb.cn/api/news/toutiao?type=caijing"
-    
-    response = requests.get(api_url, timeout=5)
-    news_data = response.json().get("result", {}).get("data", [])[:5]
-    
-    news_list = ["【今日金融热点】"]
-    for idx, news in enumerate(news_data, 1):
-        news_list.append(f"{idx}. {news.get('title', '无标题新闻')}")
-    
-    return "\n".join(news_list) if news_list else "今日暂无更新"
+SERVERCHAN_KEY = "SCT340534Tkb8yYcTXtIjOkOBKHNK7EQTw"
 
-def send_to_wechat(content):
-    requests.post(
-        f"https://sctapi.ftqq.com/{SEND_KEY}.send",
-        data={"text": "金融早报推送", "desp": content}
-    )
+def get_daily_news():
+    try:
+        resp = requests.get("https://api.vvhan.com/api/60s?type=json", timeout=15)
+        resp.raise_for_status()
+        res = resp.json()
+        if res.get("success") and "data" in res:
+            news_body = ["📢 今日财经&热点早间播报\n"]
+            for index, single_news in enumerate(res["data"]["news"][:8], 1):
+                news_body.append(f"{index}. {single_news}")
+            return "\n".join(news_body)
+        return "今日新闻暂未更新，请稍后重试"
+    except Exception as e:
+        return f"新闻获取临时异常，错误详情：{str(e)}"
+
+def send_to_wechat(news_text):
+    try:
+        push_url = f"https://sctapi.ftqq.com/{SERVERCHAN_KEY}.send"
+        push_data = {"text": "✨ 每日新闻自动推送", "desp": news_text}
+        requests.post(push_url, data=push_data, timeout=10)
+    except:
+        pass
 
 if __name__ == "__main__":
-    news_content = get_financial_news()
-    send_to_wechat(news_content)
+    final_content = get_daily_news()
+    send_to_wechat(final_content)
