@@ -1,5 +1,5 @@
 import requests
-SEND_KEY = "SCT340534Tzruc1Oeqj2q71uLgXPp34n8s"
+SEND_KEY = "SSCT340534Tkb8yYcTXtIjOkOBKHNK7EQTw"
 
 def get_news():
     url = "https://www.cls.cn/api/sw?app=CailianpressWeb&os=web&sv=7.7.5&action=getRollingNews&lastTime=0&lastId=0&pageSize=5&channel=finance"
