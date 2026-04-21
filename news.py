@@ -7,5 +7,5 @@ def get_news():
     data = response.json ().get ('data', [])
     news = ["【今日金融早报】"]
     for i, item in enumerate (data):
-    news.append (f"{i+1}. {item.get ('title', ' 无标题 ')}")
-    return "\n".join (news)
+        news.append (f"{i+1}. {item.get ('title', ' 无标题 ')}")
+        return "\n".join (news)
