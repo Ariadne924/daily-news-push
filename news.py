@@ -2,16 +2,17 @@ import requests
 
 KEY = "SCT340534Tkb8yYcTXtIjOkOBKHNK7EQTw"
 
-def get():
+def get_data():
     try:
-        r = requests.get("https://www.reddit.com/r/worldnews/hot.json?limit=8", timeout=15)
+        headers = {"User-Agent":"Mozilla/5.0"}
+        r = requests.get("https://api.thenewsapi.com/v1/news/top?api_key=demo&language=zh", headers=headers, timeout=15)
         j = r.json()
-        arr = ["🌍 全球新闻早报"]
-        for c in j["data"]["children"]:
-            arr.append(f"- {c['data']['title']}")
-        return "\n".join(arr)
+        res = ["📊 今日财经&热点新闻"]
+        for item in j.get("data", [])[:6]:
+            res.append(f"{item['title']}")
+        return "\n\n".join(res)
     except:
-        return "拉取完成"
+        return "接口访问受限"
 
 requests.post(f"https://sctapi.ftqq.com/{KEY}.send",
-data={"text":"每日新闻推送","desp":get()})
+json={"text":"每日新闻推送","desp":get_data()})
