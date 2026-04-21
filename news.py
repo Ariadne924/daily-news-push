@@ -8,4 +8,5 @@ def get_news():
     news = ["【今日金融早报】"]
     for i, item in enumerate (data):
         news.append (f"{i+1}. {item.get ('title', ' 无标题 ')}")
+    requests.post (f"https://sctapi.ftqq.com/{SEND_KEY}.send", data={"text":" 今日金融早报 ","desp":"\n".join (news)})
     return "\n".join (news)
