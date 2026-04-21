@@ -8,4 +8,4 @@ def get_news():
     news = ["【今日金融早报】"]
     for i, item in enumerate (data):
         news.append (f"{i+1}. {item.get ('title', ' 无标题 ')}")
-        return "\n".join (news)
+    return "\n".join (news)
