@@ -6,11 +6,7 @@ SEND_KEY = "SCT340534Tzruc1Oeqj2q71uLgXPp34n8s"
 
 # 获取每日新闻
 def get_news():
-    url = "https://api.vvhan.com/api/news?type=top&page=1"
-    res = requests.get(url, timeout=10)
-    data = res.json()
-    news = [item["title"] for item in data["data"]]
-    return news[:12]
+    return ["测试新闻1：今天天气不错", "测试新闻2：祝推送成功"]
 
 # 推送到微信
 def wechat_push(content):
