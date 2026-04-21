@@ -3,23 +3,24 @@ import requests
 SERVERCHAN_KEY = "SCT340534Tkb8yYcTXtIjOkOBKHNK7EQTw"
 
 def get_news():
-    try:
-        resp = requests.get("https://www.tianapi.com/v0/550/", timeout=20)
-        resp.raise_for_status()
-        data = resp.json()
-        nl = ["📰 每日新闻推送"]
-        for i, n in enumerate(data.get("newslist", [])[:8], 1):
-            nl.append(f"{i}. {n['title']}")
-        return "\n".join(nl)
-    except:
-        return "新闻正常拉取完成"
-
-def push():
-    try:
-        requests.post(f"https://sctapi.ftqq.com/{SERVERCHAN_KEY}.send",
-            data={"text":"每日新闻自动推送","desp":get_news()})
-    except:
-        pass
+    urls = [
+        "https://newsapi.ayoung.top/api",
+        "https://api.pearktrue.cn/api/60s"
+    ]
+    for url in urls:
+        try:
+            r = requests.get(url, timeout=10)
+            j = r.json()
+            if j.get("code") == 200 or j.get("success"):
+                news = ["📈 今日财经早报"]
+                for n in j["data"]["news"][:8]:
+                    news.append(f"- {n}")
+                return "\n".join(news)
+        except:
+            continue
+    return "接口临时波动"
 
 if __name__ == "__main__":
-    push()
+    c = get_news()
+    requests.post(f"https://sctapi.ftqq.com/{SERVERCHAN_KEY}.send",
+        data={"text":"每日新闻推送","desp":c})
