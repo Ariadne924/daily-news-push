@@ -6,11 +6,10 @@ SEND_KEY = "SCT340534Tzruc1Oeqj2q71uLgXPp34n8s"
 
 # 获取每日新闻
 def get_news():
-    url = "https://api.03c3.cn/api/60s"
+    url = "https://api.vvhan.com/api/news?type=top&page=1"
     res = requests.get(url, timeout=10)
     data = res.json()
-    news = data.get("news", [])
-    # 精简12条，不会太长
+    news = [item["title"] for item in data["data"]]
     return news[:12]
 
 # 推送到微信
